@@ -163,7 +163,7 @@ def updateParamsPTC(lattice, bunch):
 	Updates element parameters.
 	Updates synchronous particle parameters of the bunch.
 	"""
-	(betax, betay, alphax, alphay, etax, etapx, etay, etapy, orbitx, orbitpx, orbity, orbitpy) =\
+	(betax,betay,alphax,alphay,etax,etapx,etay,etapy,orbitx,orbitpx,orbity,orbitpy) =\
 	    ptc_get_twiss_init_()
 	lattice.betax0   = betax
 	lattice.betay0   = betay
@@ -185,10 +185,10 @@ def updateParamsPTC(lattice, bunch):
 	for node in lattice.getNodes():
 		node_index = node.getParam("node_index")
 		length     = node.getLength()
-		ptc_get_twiss_for_node_(node_index)
-		node.setparams(node_index, length,\
-				       betax, betay, alphax, alphay,\
-				       etax, etapx)
+		(_,betax,betay,alphax,alphay,etax,etapx,etay,etapy,orbitx,orbitpx,orbity,orbitpy) =\
+			ptc_get_twiss_for_node_(node_index)
+		node.setparams(node_index,length,betax,betay,alphax,alphay,etax,etapx,etay,etapy,\
+					   orbitx, orbitpx, orbity, orbitpy)
 	setBunchParamsPTC(bunch)
 
 
