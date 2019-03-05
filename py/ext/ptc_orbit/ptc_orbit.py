@@ -36,16 +36,16 @@ class PTC_Lattice(TEAPOT_Lattice):
 	def __init__(self, name = "no name"):
 		TEAPOT_Lattice.__init__(self, name)
 
-        def readPTC(self, PTC_File):
-                """
-                Reads the PTC file input and initializes all structures.
-                Input PTC_File is the flat PTC file.
-                """
+	def readPTC(self, PTC_File):
+		"""
+		Reads the PTC file input and initializes all structures.
+		Input PTC_File is the flat PTC file.
+		"""
 		self.setName(PTC_File)
-                length_of_name = len(PTC_File)
-                ptc_init_(PTC_File, length_of_name - 1)
-                (betax, betay, alphax, alphay, etax, etapx, etay, etapy, orbitx, orbitpx, orbity, orbitpy) =\
-                    ptc_get_twiss_init_()
+		length_of_name = len(PTC_File)
+		ptc_init_(PTC_File, length_of_name - 1)
+		(betax, betay, alphax, alphay, etax, etapx, etay, etapy, orbitx, orbitpx, orbity, orbitpy) =\
+				ptc_get_twiss_init_()
 		self.betax0   = betax
 		self.betay0   = betay
 		self.alphax0  = alphax
@@ -58,23 +58,20 @@ class PTC_Lattice(TEAPOT_Lattice):
 		self.orbitpx0 = orbitpx
 		self.orbity0  = orbity
 		self.orbitpy0 = orbitpy
-                (nNodes, nHarm, lRing, gammaT) = ptc_get_ini_params_()
+		(nNodes, nHarm, lRing, gammaT) = ptc_get_ini_params_()
 		self.nNodes = nNodes
 		self.nHarm  = nHarm
 		self.lRing  = lRing
 		self.gammaT = gammaT
-                for node_index in range(nNodes):
-                        (length, betax, betay, alphax, alphay, \
-                                 etax, etapx, etay, etapy, \
-                                 orbitx, orbitpx, orbity, orbitpy) =\
-                                 ptc_get_twiss_for_node_(node_index)
-                        elem = PTC_Node("PTC_Node")
-			elem.setparams(node_index, length,\
-					       betax, betay, alphax, alphay,\
-					       etax, etapx, etay, etapy,\
-					       orbitx, orbitpx, orbity, orbitpy)
-                        self.addNode(elem)
-                self.initialize()
+		for node_index in range(nNodes):
+			(length, betax, betay, alphax, alphay, etax, etapx, \
+				etay, etapy, orbitx, orbitpx, orbity, orbitpy) =\
+				ptc_get_twiss_for_node_(node_index)
+			elem = PTC_Node("PTC_Node")
+			elem.setparams(node_index, length, betax, betay, alphax, \
+				alphay, etax, etapx, etay, etapy, orbitx, orbitpx, orbity, orbitpy)
+			self.addNode(elem)
+		self.initialize()
 
 
 class PTC_Node(BaseTEAPOT):
@@ -184,11 +181,20 @@ def updateParamsPTC(lattice, bunch):
 	lattice.gammaT = gammaT
 	for node in lattice.getNodes():
 		node_index = node.getParam("node_index")
-		length     = node.getLength()
 		(_,betax,betay,alphax,alphay,etax,etapx,etay,etapy,orbitx,orbitpx,orbity,orbitpy) =\
 			ptc_get_twiss_for_node_(node_index)
-		node.setparams(node_index,length,betax,betay,alphax,alphay,etax,etapx,etay,etapy,\
-					   orbitx, orbitpx, orbity, orbitpy)
+		node.setParam("betax"  , betax)
+		node.setParam("betay"  , betay)
+		node.setParam("alphax" , alphax)
+		node.setParam("alphay" , alphay)
+		node.setParam("etax"   , etax)
+		node.setParam("etapx"  , etapx)
+		node.setParam("etay"   , etay)
+		node.setParam("etapy"  , etapy)
+		node.setParam("orbitx" , orbitx)
+		node.setParam("orbitpx", orbitpx)
+		node.setParam("orbity" , orbity)
+		node.setParam("orbitpy", orbitpy)
 	setBunchParamsPTC(bunch)
 
 
