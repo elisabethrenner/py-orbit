@@ -6,6 +6,10 @@
 #include "CppPyWrapper.hh"
 #include "Bunch.hh"
 
+// MPI Function Wrappers
+#include "orbit_mpi.hh"
+#include "wrap_mpi_comm.hh"
+
 using namespace std;
 
 /** 
@@ -25,7 +29,24 @@ public:
 	/** Routine for transfering particles through a foil with simplified scattering. No particle loss. */
 	void traverseFoilSimpleScatter(Bunch* bunch);
 
+	/** Returns global number of foil hits **/
+	int getFoilHitsGlobal();
+
+	/** Returns local number of foil hits **/
+	int getFoilHitsLocal();
+
+	/** Sets local number of foil hits **/
+	void setFoilHitsLocal(int nHits_new);
 	
+	/** Returns global number of particles lost on the foil **/
+	int getFoilLossesGlobal();
+
+	/** Returns local number of particles lost on the foil **/
+	int getFoilLossesLocal();
+
+	/** Sets local number of particles lost on the foil **/
+	void setFoilLossesLocal(int nLost_new);
+
 private:
 
 	/** check to see if the particle is inside the foil */
@@ -57,6 +78,8 @@ protected:
 	//Counters	
 	int nHits;
 	int nLost;
+	int nHitsGlobal;
+	int nLostGlobal;
 
 	//Foil parameters
 	double xmin_, xmax_, ymin_, ymax_, thick_;
