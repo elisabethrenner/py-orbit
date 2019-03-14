@@ -21,8 +21,9 @@
 
 using namespace OrbitUtils;
 
-SpaceChargeCalcSliceBySlice2D::SpaceChargeCalcSliceBySlice2D(int xSize, int ySize, int zSize, double xy_ratio_in): CppPyWrapper(NULL)
+SpaceChargeCalcSliceBySlice2D::SpaceChargeCalcSliceBySlice2D(int xSize, int ySize, int zSize, double xy_ratio_in, int useLongitudinalKick_in): CppPyWrapper(NULL)
 {
+	useLongitudinalKick = useLongitudinalKick_in;
 	xy_ratio = xy_ratio_in;
 	poissonSolver = new PoissonSolverFFT2D(xSize, ySize, -xy_ratio, xy_ratio, -1.0, 1.0);
 	rhoGrid3D = new Grid3D(xSize, ySize, zSize);	
@@ -30,8 +31,9 @@ SpaceChargeCalcSliceBySlice2D::SpaceChargeCalcSliceBySlice2D(int xSize, int ySiz
 	bunchExtremaCalc = new BunchExtremaCalculator();
 }
 
-SpaceChargeCalcSliceBySlice2D::SpaceChargeCalcSliceBySlice2D(int xSize, int ySize, int zSize): CppPyWrapper(NULL)
+SpaceChargeCalcSliceBySlice2D::SpaceChargeCalcSliceBySlice2D(int xSize, int ySize, int zSize, int useLongitudinalKick_in): CppPyWrapper(NULL)
 {
+	useLongitudinalKick = useLongitudinalKick_in;
 	xy_ratio = 1.0;
 	poissonSolver = new PoissonSolverFFT2D(xSize, ySize, -xy_ratio, xy_ratio, -1.0, 1.0);
 	rhoGrid3D = new Grid3D(xSize, ySize, zSize);		
@@ -112,7 +114,9 @@ void SpaceChargeCalcSliceBySlice2D::trackBunch(Bunch* bunch, double length, Base
 
 			bunch->xp(i) -= ex * scFactor;
 			bunch->yp(i) -= ey * scFactor;
-			bunch->dE(i) -= ez * scFactorLongitudinal;	
+			if(useLongitudinalKick != 0){
+				bunch->dE(i) -= ez * scFactorLongitudinal;	
+			}
 		}
 	}	
 }

@@ -28,9 +28,9 @@ class SpaceChargeCalcSliceBySlice2D: public OrbitUtils::CppPyWrapper
 public:
 	
 	/** Constructor */
-	SpaceChargeCalcSliceBySlice2D(int xSize, int ySize, int zSize, double xy_ratio_in);
+	SpaceChargeCalcSliceBySlice2D(int xSize, int ySize, int zSize, double xy_ratio_in, int useLongitudinalKick_in);
 
-	SpaceChargeCalcSliceBySlice2D(int xSize, int ySize, int zSize);
+	SpaceChargeCalcSliceBySlice2D(int xSize, int ySize, int zSize, int useLongitudinalKick_in);
 	
 	/** Destructor */
 	virtual ~SpaceChargeCalcSliceBySlice2D();
@@ -56,7 +56,8 @@ protected:
 	Grid3D* rhoGrid3D;	
 	Grid3D* phiGrid3D;	
 	OrbitUtils::BunchExtremaCalculator* bunchExtremaCalc;
-	
+
+	int useLongitudinalKick;
 	double xy_ratio;
 };
 //end of SC_SPACECHARGE_CALC_2P5D_H

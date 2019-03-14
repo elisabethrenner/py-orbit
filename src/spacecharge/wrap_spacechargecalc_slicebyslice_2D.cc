@@ -23,7 +23,6 @@ extern "C" {
 
 	//constructor for python class wrapping SpaceChargeCalcSliceBySlice2D instance
 	//It never will be called directly
-
 	static PyObject* SpaceChargeCalcSliceBySlice2D_new(PyTypeObject *type, PyObject *args, PyObject *kwds)
 	{
 		pyORBIT_Object* self;
@@ -38,19 +37,22 @@ extern "C" {
   static int SpaceChargeCalcSliceBySlice2D_init(pyORBIT_Object *self, PyObject *args, PyObject *kwds){
   	int xSize,ySize,zSize;
   	double xy_ratio = -1.0;
-		if(!PyArg_ParseTuple(args,"iii|d:__init__",&xSize,&ySize,&zSize,&xy_ratio)){
-			ORBIT_MPI_Finalize("PySpaceChargeCalcSliceBySlice2D - SpaceChargeCalcSliceBySlice2D(xSize,ySize,xzSize[,xy_ratio = 1.0]) - constructor needs parameters.");
+  	int useLongitudinalKick = 0;
+  	static char *kwlist[] = {"xSize", "ySize", "zSize", "xy_ratio","useLongitudinalKick", NULL};
+		if (!PyArg_ParseTupleAndKeywords(args, kwds, "iii|di", kwlist,
+                                     &xSize,&ySize,&zSize,&xy_ratio,&useLongitudinalKick)){
+			ORBIT_MPI_Finalize("PySpaceChargeCalcSliceBySlice2D - SpaceChargeCalcSliceBySlice2D(xSize,ySize,xzSize[,xy_ratio = 1.0, useLongitudinalKick = 0]) - constructor needs parameters.");
 		}
 		if(xy_ratio > 0.){
-			self->cpp_obj = new SpaceChargeCalcSliceBySlice2D(xSize,ySize,zSize,xy_ratio);
+			self->cpp_obj = new SpaceChargeCalcSliceBySlice2D(xSize,ySize,zSize,xy_ratio,useLongitudinalKick);
 		} else {
-			self->cpp_obj = new SpaceChargeCalcSliceBySlice2D(xSize,ySize,zSize);
+			self->cpp_obj = new SpaceChargeCalcSliceBySlice2D(xSize,ySize,zSize,useLongitudinalKick);
 		}
 		((SpaceChargeCalcSliceBySlice2D*) self->cpp_obj)->setPyWrapper((PyObject*) self);
 		//std::cerr<<"The SpaceChargeCalcSliceBySlice2D __init__ has been called!"<<std::endl;
 		return 0;
 	}
-  
+
   //Grid3D* getRhoGrid() returns the 3D grid with charge density
   static PyObject* SpaceChargeCalcSliceBySlice2D_getRhoGrid(PyObject *self, PyObject *args){
 		pyORBIT_Object* pySpaceChargeCalcSliceBySlice2D = (pyORBIT_Object*) self;
