@@ -97,8 +97,9 @@ void SpaceChargeCalcSliceBySlice2D::trackBunch(Bunch* bunch, double length, Base
 	phiGrid3D->synchronizeMPI(bunch->getMPI_Comm_Local());
 	
 	SyncPart* syncPart = bunch->getSyncPart();	
-	double factor = 2*length/rhoGrid3D->getStepZ()*bunch->getClassicalRadius()*pow(bunch->getCharge(),2)/(pow(syncPart->getBeta(),2)*pow(syncPart->getGamma(),3));	
-	
+	double scFactor = 2 * length / rhoGrid3D->getStepZ() * bunch->getClassicalRadius() * 
+						pow(bunch->getCharge(),2) / (pow(syncPart->getBeta(),2) * pow(syncPart->getGamma(),3));	
+	double scFactorLongitudinal = scFactor * pow(syncPart->getBeta(),2) * (syncPart->getEnergy()+syncPart->getMass());
 	double x,y,z,ex,ey,ez;	
 		
 	for (int i = 0, n = bunch->getSize(); i < n; i++){
@@ -109,8 +110,9 @@ void SpaceChargeCalcSliceBySlice2D::trackBunch(Bunch* bunch, double length, Base
 		if(boundary == NULL || (boundary != NULL && boundary->isInside(x,y) == BaseBoundary2D::IS_INSIDE)){
 			phiGrid3D->calcGradient(x,ex,y,ey,z,ez);	
 
-			bunch->xp(i) -= ex * factor;
-			bunch->yp(i) -= ey * factor;	
+			bunch->xp(i) -= ex * scFactor;
+			bunch->yp(i) -= ey * scFactor;
+			bunch->dE(i) -= ez * scFactorLongitudinal;	
 		}
 	}	
 }
