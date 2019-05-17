@@ -51,24 +51,50 @@ extern "C" {
 		return Py_None;
   }
 
-  /** Performs the Tune analysis of the bunch */
+  /** Assigns Twiss values at location of calculator */
 	static PyObject* BunchTuneAnalysis_assignTwiss(PyObject *self, PyObject *args){
 		BunchTuneAnalysis* cpp_BunchTuneAnalysis = (BunchTuneAnalysis*)((pyORBIT_Object*) self)->cpp_obj;
-		double betax;
-		double alphax;
-		double etax;
-		double etapx;
-		double betay;
-		double alphay;
-		if(!PyArg_ParseTuple(args,"dddddd:assignTwiss",&betax, &alphax,&etax,&etapx,&betay,&alphay)){
-			ORBIT_MPI_Finalize("BunchTuneAnalysis - getTwiss(double betax, double alphax, double etax, double etapx, double betay, double alphay) - parameter are needed.");
+// 		int nVars = PyTuple_Size(args);
+		double betax  = 0.;
+		double alphax = 0.;
+		double etax   = 0.;
+		double etapx  = 0.;
+		double betay  = 0.;
+		double alphay = 0.;
+		double etay   = 0.;
+		double etapy  = 0.;
+// 		if (nVars == 6){
+// 			if(!PyArg_ParseTuple(args,"dddddd:assignTwiss",&betax, &alphax,&etax,&etapx,&betay,&alphay)){
+// 				ORBIT_MPI_Finalize("BunchTuneAnalysis - getTwiss(double betax, double alphax, double etax, double etapx, double betay, double alphay) - parameter are needed.");
+// 			}
+// 		}
+// 		if (nVars == 8){
+			if(!PyArg_ParseTuple(args,"dddddd|dd:assignTwiss",&betax, &alphax,&etax,&etapx,&betay,&alphay,&etay,&etapy)){
+				ORBIT_MPI_Finalize("BunchTuneAnalysis - getTwiss(double betax, double alphax, double etax, double etapx, double betay, double alphay, double etay, double etapy) \
+				- or getTwiss(double betax, double alphax, double etax, double etapx, double betay, double alphay) - parameter are needed.");
+			}
+// 		}		
+		cpp_BunchTuneAnalysis->assignTwiss(betax, alphax, etax, etapx, betay, alphay, etay, etapy);
+		Py_INCREF(Py_None);
+		return Py_None;
+	}
+
+  /** Assigns Closed Orbit values at location of calculator */
+	static PyObject* BunchTuneAnalysis_assignClosedOrbit(PyObject *self, PyObject *args){
+		BunchTuneAnalysis* cpp_BunchTuneAnalysis = (BunchTuneAnalysis*)((pyORBIT_Object*) self)->cpp_obj;
+		double cox    = 0.;
+		double coxp   = 0.;
+		double coy    = 0.;
+		double coyp   = 0.;
+		if(!PyArg_ParseTuple(args,"dddd:assignClosedOrbit",&cox, &coxp,&coy,&coyp)){
+			ORBIT_MPI_Finalize("BunchTuneAnalysis - assignClosedOrbit(double x, double xp, double y, double yp) - parameter are needed.");
 		}
-		cpp_BunchTuneAnalysis->assignTwiss(betax, alphax, etax, etapx, betay, alphay);
+		cpp_BunchTuneAnalysis->assignClosedOrbit(cox, coxp, coy, coyp);
 		Py_INCREF(Py_None);
 		return Py_None;
 	}
 	
-	
+
 	
   //--------------------------------------------------------------
   //destructor for python BunchTuneAnalysis class (__del__ method).
@@ -84,6 +110,7 @@ extern "C" {
   static PyMethodDef BunchTuneAnalysisClassMethods[] = {
 		{ "analyzeBunch", BunchTuneAnalysis_analyzeBunch, METH_VARARGS,"Performs the Tune analysis of the bunch."},
 		{ "assignTwiss", BunchTuneAnalysis_assignTwiss, METH_VARARGS,"Assigns Twiss at location of tune calculator."},
+		{ "assignClosedOrbit", BunchTuneAnalysis_assignClosedOrbit, METH_VARARGS,"Assigns Closed Orbit at location of tune calculator."},
 		{NULL}
   };
 	

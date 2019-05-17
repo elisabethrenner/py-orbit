@@ -101,7 +101,7 @@ void LSpaceChargeCalc::trackBunch(Bunch* bunch)
   zmin  = zmax - length;
   zGrid->setGridZ(zmin, zmax);
   zGrid->setZero();
-  zGrid->binBunchSmoothedByParticle(bunch);
+  zGrid->binBunchSmoothed(bunch);
   zGrid->synchronizeMPI(bunch->getMPI_Comm_Local());
 
 // FFT the beam density
@@ -156,13 +156,18 @@ void LSpaceChargeCalc::trackBunch(Bunch* bunch)
 
 // Convert charge to current for a single macroparticle per unit bin length
 
+<<<<<<< HEAD
 // 10/11/17 JBL - macrosize can be global or individually associated
   double m_size = bunch->getMacroSize();
   int has_msize = bunch->hasParticleAttributes("macrosize");
 // 10/11/17 JBL - remove the macrosize here to add it later
   double charge2current = bunch->getCharge() * //bunch->getMacroSize() *
+=======
+  double charge2current = bunch->getCharge() * 
+>>>>>>> f31ef187ea69618969a38a584dd5d18802cb9bc8
                           OrbitConst::elementary_charge_MKS * sp->getBeta() *
                           OrbitConst::c / (length / nBins);
+  
 
 // Calculate and add the kick to macroparticles
 

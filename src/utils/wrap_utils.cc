@@ -13,6 +13,7 @@
 #include "wrap_polynomial.hh"
 #include "wrap_numrecipes.hh"
 #include "wrap_bunch_utils_functions.hh"
+#include "wrap_error_functions.hh"
 
 namespace wrap_orbit_utils{
 
@@ -40,7 +41,8 @@ extern "C" {
 		wrap_polynomial::initPolynomial(module);		
 		//this call creates the module orbit_utils.numrecipes with functions
 		wrap_numrecipes::initNumrecipes(module,"num_recipes");
-		wrap_utils_bunch_functions::initBunchUtilsFunctions(module,"bunch_utils_functions");	
+		wrap_utils_bunch_functions::initBunchUtilsFunctions(module,"bunch_utils_functions");
+		wrap_errorfunctions::initErrorfunctions("orbit_utils.errorfunctions");	
   }
 
 	PyObject* getOrbitUtilsType(const char* name){

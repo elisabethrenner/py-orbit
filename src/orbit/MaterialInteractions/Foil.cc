@@ -41,6 +41,8 @@ Foil::Foil(double xmin, double xmax, double ymin, double ymax, double thick): Cp
 	thick_ = thick;
 	length_ = 0.0;
 	ma_ = 0;
+	nHits = 0;
+	nLost = 0;
 }
 
 ///////////////////////////////////////////////////////////////////////////
@@ -148,6 +150,8 @@ void Foil::traverseFoilSimpleScatter(Bunch* bunch){
 		}
 	}
 
+	// Update global number of hits
+	ORBIT_MPI_Allreduce(&nHits, &nHitsGlobal, 1, MPI_INT, MPI_SUM, MPI_COMM_WORLD);
 }
 
 	
@@ -309,6 +313,13 @@ void Foil::traverseFoilFullScatter(Bunch* bunch, Bunch* lostbunch){
 	bunch->compress();
 	double newtime = syncPart->getTime() + length/( syncPart->getBeta()*OrbitConst::c );
 	syncPart->setTime(newtime);
+
+	// Update global number of hits
+	ORBIT_MPI_Allreduce(&nHits, &nHitsGlobal, 1, MPI_INT, MPI_SUM, MPI_COMM_WORLD);
+
+	// Update global number of lost particles
+	ORBIT_MPI_Allreduce(&nLost, &nLostGlobal, 1, MPI_INT, MPI_SUM, MPI_COMM_WORLD);
+
 }
 
 ///////////////////////////////////////////////////////////////////////////
@@ -587,4 +598,109 @@ void Foil::loseParticle(Bunch* bunch, Bunch* lostbunch, int ip, int& nLost, int&
 }
 	
 	
+
+///////////////////////////////////////////////////////////////////////////
+//
+// NAME
+//
+//   Foil::getFoilHitsGlobal
+//
+// RETURNS
+//   Returns global number of hits on the foil
+//
+///////////////////////////////////////////////////////////////////////////
+
+
+int Foil::getFoilHitsGlobal(){
+	return nHitsGlobal;
+}
+
+
+
+///////////////////////////////////////////////////////////////////////////
+//
+// NAME
+//
+//   Foil::getFoilHitsLocal
+//
+// RETURNS
+//   Returns local number of hits on the foil
+//
+///////////////////////////////////////////////////////////////////////////
+
+
+int Foil::getFoilHitsLocal(){
+	return nHits;
+}
+
+
+
+//////////////////////////////////////////////////////////////////////////
+//
+// NAME
+//
+//   Foil::setFoilHitsLocal
+//
+// RETURNS
+//   Sets local number of hits on the foil
+//
+///////////////////////////////////////////////////////////////////////////
+
+
+void Foil::setFoilHitsLocal(int nHits_new){
+	nHits = nHits_new;
+}
+
+
+///////////////////////////////////////////////////////////////////////////
+//
+// NAME
+//
+//   Foil::getFoilLossesGlobal
+//
+// RETURNS
+//   Returns global number of lost particles on the foil
+//
+///////////////////////////////////////////////////////////////////////////
+
+
+int Foil::getFoilLossesGlobal(){
+	return nLostGlobal;
+}
+
+
+
+///////////////////////////////////////////////////////////////////////////
+//
+// NAME
+//
+//   Foil::getFoilLossesLocal
+//
+// RETURNS
+//   Returns local number of lost particles on the foil
+//
+///////////////////////////////////////////////////////////////////////////
+
+
+int Foil::getFoilLossesLocal(){
+	return nLost;
+}
+
+
+
+//////////////////////////////////////////////////////////////////////////
+//
+// NAME
+//
+//   Foil::setFoilLossesLocal
+//
+// RETURNS
+//   Sets local number of lost particles on the foil
+//
+///////////////////////////////////////////////////////////////////////////
+
+
+void Foil::setFoilLossesLocal(int nLost_new){
+	nLost = nLost_new;
+}
 
