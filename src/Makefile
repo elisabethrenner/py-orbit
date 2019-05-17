@@ -5,11 +5,16 @@ DIRS = $(filter-out test%,$(patsubst %/, %, $(filter %/,$(shell ls -F))))
 
 all: compile
 
-compile:
-	@for dir in $(DIRS); do \
-		(cd $$dir; if [ -f ./Makefile ]; then $(MAKE) compile; fi;); \
+compile: 
+	for dir in $(DIRS); do \
+		(cd $$dir; if [ -f ./Makefile ]; then echo Compiling $$dir; $(MAKE) compile; fi;); \
 	done
+	@echo "Compilation of py-orbit/src sub-directories completed"
+	@echo "****************************************"
+	@echo "Compiling py-orbit/src with MakefileMain"
 	$(MAKE) --makefile=MakefileMain compile
+	@echo "Compilation of py-orbit/src completed"
+	@echo "****************************************"
 
 clean:
 	@for dir in $(DIRS); do \

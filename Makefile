@@ -8,7 +8,7 @@ all: compile
 
 compile:
 	@for dir in $(DIRS); do \
-		(cd $$dir; if [ -f ./Makefile ]; then $(MAKE) compile; fi;); \
+		(cd $$dir; if [ -f ./Makefile ]; then echo "Compiling $$dir"; $(MAKE) compile; fi;); \
 	done	
 
 clean:
