@@ -13,7 +13,7 @@ all: compile
 
 compile:  
 	@for dir in $(DIRS); do \
-		(cd $$dir; if [ -f ./Makefile ]; then echo "Compiling $$dir"; $(MAKE) compile; fi;); \
+		(cd $$dir; if [ -f ./Makefile.$(COMP) ]; then echo "Compiling $$dir"; $(MAKE) -f Makefile.$(COMP) compile; fi;); \
 	done
 	@echo "Compilation of py-orbit/ext sub-directories completed"
 	@echo "Compilation of py-orbit/src completed"

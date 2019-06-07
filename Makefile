@@ -1,10 +1,16 @@
 DIRS  = 
-DIRS += ./src
 DIRS += ./ext
+DIRS += ./src
 
 #========rules=========================
 
 all: compile
+
+ifeq ($(COMP),)
+    COMP=intel
+endif
+
+$(info COMP is $(COMP))
 
 compile:
 	@for dir in $(DIRS); do \

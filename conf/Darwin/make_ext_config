@@ -15,4 +15,4 @@ endif
 CXX             =  ${MPI_CPP}
 CXXFLAGS       += -fPIC -DUSE_MPI=1
 FORTFLAGS      += -fpic
-LINKFLAGS      += -fPIC -shared -Wl,--export-dynamic
+LINKFLAGS      += -fPIC -shared -Wl,--export-dynamic  -Wl,-no_compact_unwind
