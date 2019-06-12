@@ -6,10 +6,29 @@ DIRS  =
 DIRS += ./PTC
 
 $(info Got $$LIBS as follows [${LIBS}])
+$(info Got $$COMP is [${COMP}])
+$(info $$PROD_DIR is [${PROD_DIR}])
+$(info $$INTEL_TARGET_ARCH is [${INTEL_TARGET_ARCH}])
+$(info $$ORBIT_ARCH is [${ORBIT_ARCH}])
+
+export INTEL_TARGET_ARCH PROD_DIR
 
 #========rules=========================
 
-all: compile
+#all: compile
+
+TOPTARGETS := all clean
+
+$(TOPTARGETS): $(DIRS)
+
+
+
+$(DIRS):
+	$(info Calling argument $@)
+	$(MAKE)  -C $@ $(MAKECMDGOALS) -f Makefile.$(COMP)
+	
+.PHONY: $(TOPTARGETS) $(DIRS)
+
 
 compile:  
 	@for dir in $(DIRS); do \
