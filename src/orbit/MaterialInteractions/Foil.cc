@@ -64,6 +64,7 @@ Foil::Foil(double xmin, double xmax, double ymin, double ymax, double thick): Cp
 ///////////////////////////////////////////////////////////////////////////
 
 void Foil::traverseFoilSimpleScatter(Bunch* bunch){
+        cout << "Testline"; 
 
 	double BohrRadius=0.52917706e-8;  // hydrogenic Bohr radius in cm
 	double hBar = 1.0545887e-27;      // Planck's constant in erg-sec
