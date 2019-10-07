@@ -64,7 +64,6 @@ Foil::Foil(double xmin, double xmax, double ymin, double ymax, double thick): Cp
 ///////////////////////////////////////////////////////////////////////////
 
 void Foil::traverseFoilSimpleScatter(Bunch* bunch){
-        cout << "Testline"; 
 
 	double BohrRadius=0.52917706e-8;  // hydrogenic Bohr radius in cm
 	double hBar = 1.0545887e-27;      // Planck's constant in erg-sec
@@ -218,7 +217,7 @@ void Foil::traverseFoilFullScatter(Bunch* bunch, Bunch* lostbunch){
 				double p = Foil::getP(part_coord_arr[ip], syncPart);
 				double theta = 0.0136 / (beta * p) / sqrt(radlengthfac);
 				double pfac = Foil::getPFactor(part_coord_arr[ip], syncPart);
-				double ecross = OrbitUtils::get_elastic_crosssection((syncPart->getEnergy() + part_coord_arr[ip][5]), ma_);
+			/*	double ecross = OrbitUtils::get_elastic_crosssection((syncPart->getEnergy() + part_coord_arr[ip][5]), ma_);
 				double icross = OrbitUtils::get_inelastic_crosssection((syncPart->getEnergy() + part_coord_arr[ip][5]), ma_);
 				
 				if(step == 0){ //If first step, do an iteration with ecross and icross to get first stepsize and first rcross 
@@ -232,16 +231,17 @@ void Foil::traverseFoilFullScatter(Bunch* bunch, Bunch* lostbunch){
 				double totcross = ecross + icross + rcross;
 				meanfreepath = OrbitUtils::get_a(ma_) / ((nAvogadro * 1e3) * density  * (totcross * 1.0e-28));
 				stepsize = -meanfreepath * log(Random::ran1(idum));
-			
+			*/
+				stepsize = 2*rl; 
 				if(stepsize > rl){ //Take the step but no nuclear scattering event
 					stepsize = rl + dlength;
 					Foil::takeStep(bunch, lostbunch, part_coord_arr[ip], syncPart, z, a, density, 
 								   idum, stepsize, zrl, rl, foil_flag, ip);
 					
 				}
-				if(stepsize <= rl) { //Take the step and allow nuclear scatter
+			/*	if(stepsize <= rl) { //Take the step and allow nuclear scatter
 					Foil::takeStep(bunch, lostbunch, part_coord_arr[ip], syncPart, z, a, density, idum, stepsize, zrl, rl, foil_flag, ip);
-				
+					/*
 					//If it still exists after MCS and energy loss, nuclear scatter
 					if(foil_flag==1 && zrl > 0){
 						beta = Foil::getBeta(part_coord_arr[ip], syncPart);
@@ -299,7 +299,7 @@ void Foil::traverseFoilFullScatter(Bunch* bunch, Bunch* lostbunch){
 							loseParticle(bunch, lostbunch, ip, nLost, foil_flag, zrl);
 						}
 						
-					}
+					} */
 				}
 			}
 			else{
