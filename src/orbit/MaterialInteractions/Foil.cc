@@ -299,8 +299,8 @@ void Foil::traverseFoilFullScatter(Bunch* bunch, Bunch* lostbunch){
 							loseParticle(bunch, lostbunch, ip, nLost, foil_flag, zrl);
 						}
 						
-					} */
-				}
+					} 
+				} */
 			}
 			else{
 				//Drift by the foil
